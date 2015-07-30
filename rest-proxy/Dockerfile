@@ -15,7 +15,7 @@ COPY rest-proxy-docker.sh /usr/local/bin/
 
 RUN groupadd -r ${CONFLUENT_GROUP} &&\
     useradd -r -g ${CONFLUENT_GROUP} ${CONFLUENT_USER} &&\
-    chown -R ${CONFLUENT_USER}:${CONFLUENT_GROUP} /etc/kafka-rest /usr/local/bin/rest-proxy-docker.sh &&\
+    chown -R ${CONFLUENT_USER}:${CONFLUENT_GROUP} /etc/kafka-rest /usr/local/bin/rest-proxy-docker.sh /usr/bin/kafka-rest-run-class &&\
     chmod +x /usr/local/bin/rest-proxy-docker.sh
 
 USER ${CONFLUENT_USER}
