@@ -20,7 +20,7 @@ RUN apt-get -y update &&\
     curl --silent --insecure --location --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_BUILD}/server-jre-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-linux-x64.tar.gz | tar zxf - -C $JAVA_BASE &&\
     update-alternatives --install /usr/bin/java java $JAVA_BASE/jdk1.${JAVA_VERSION_MAJOR}.0_${JAVA_VERSION_MINOR}/bin/java 100 &&\
     update-alternatives --install /usr/bin/javac javac $JAVA_BASE/jdk1.${JAVA_VERSION_MAJOR}.0_${JAVA_VERSION_MINOR}/bin/javac 100 &&\
-    curl -SL http://packages.confluent.io/deb/1.0/archive.key | apt-key add - &&\
+    curl --silent --show-error --insecure --location http://packages.confluent.io/deb/1.0/archive.key | apt-key add - &&\
     echo 'deb [arch=all] http://packages.confluent.io/deb/1.0 stable main' >> /etc/apt/sources.list &&\
     apt-get -y update &&\
     apt-get install -y confluent-platform-${SCALA_VERSION}
