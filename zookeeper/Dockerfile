@@ -4,7 +4,7 @@
 #   docker build -t confluent/zookeeper zookeeper
 #   docker run -d --name zookeeper confluent/zookeeper
 
-FROM cgswong/confluent-platform:1.0
+FROM cgswong/confluent-platform:1.0b2.11.5
 
 ENV ZK_DATA_DIR "/var/lib/zookeeper"
 ENV CONFLUENT_USER confluent
