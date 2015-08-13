@@ -1,7 +1,5 @@
-Confluent Stream Data Platform on Docker
-========================================
-
-Experimental docker images for running the
+# Confluent Stream Data Platform on Docker
+Docker images for running the
 [Confluent Platform](http://confluent.io/docs/current/index.html).
 
 The Docker version of the [Confluent Quickstart](http://confluent.io/docs/current/quickstart.html)
