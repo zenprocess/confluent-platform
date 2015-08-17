@@ -17,8 +17,7 @@ RUN groupadd -r ${CONFLUENT_GROUP} &&\
     useradd -r -g ${CONFLUENT_GROUP} ${CONFLUENT_USER} &&\
     mkdir -p /etc/kafka-mirrormaker &&\
     chown -R ${CONFLUENT_USER}:${CONFLUENT_GROUP} /usr/local/bin/mirrormaker-docker.sh ${MM_CFG_DIR} &&\
-    chmod +x /usr/local/bin/mirrormaker-docker.sh &&\
-
+    chmod +x /usr/local/bin/mirrormaker-docker.sh
 
 USER ${CONFLUENT_USER}
 
