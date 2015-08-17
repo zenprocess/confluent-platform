@@ -11,13 +11,13 @@ ENV CONFLUENT_USER confluent
 ENV CONFLUENT_GROUP confluent
 ENV MM_CFG_DIR "/etc/kafka-mirrormaker"
 
-COPY mirror-maker-docker.sh /usr/local/bin/
+COPY mirrormaker-docker.sh /usr/local/bin/
 
 RUN groupadd -r ${CONFLUENT_GROUP} &&\
     useradd -r -g ${CONFLUENT_GROUP} ${CONFLUENT_USER} &&\
     mkdir -p /etc/kafka-mirrormaker &&\
-    chown -R ${CONFLUENT_USER}:${CONFLUENT_GROUP} /usr/local/bin/mirror-maker-docker.sh ${MM_CFG_DIR} &&\
-    chmod +x /usr/local/bin/mirror-maker-docker.sh &&\
+    chown -R ${CONFLUENT_USER}:${CONFLUENT_GROUP} /usr/local/bin/mirrormaker-docker.sh ${MM_CFG_DIR} &&\
+    chmod +x /usr/local/bin/mirrormaker-docker.sh &&\
 
 
 USER ${CONFLUENT_USER}

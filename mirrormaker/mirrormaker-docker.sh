@@ -77,10 +77,10 @@ if [ $? -ne 0 ]; then
 fi
 
 # Add needed minimum options if none are given
-if [[ ! "$@" ~=  "*--num.streams*" ]]; then
+if [[ ! "$@" =~  "*--num.streams*" ]]; then
   set -- "$@" --num.streams $MM_STREAMS
 fi
-if [[ ! "$@" ~=  "*--whitelist*" ]] || [[ ! "$@" ~=  "*--blacklist*" ]]; then
+if [[ ! "$@" =~  "*--whitelist*" || ! "$@" =~  "*--blacklist*" ]]; then
   set -- "$@" --whitelist="${MM_TOPICS}"
 fi
 
