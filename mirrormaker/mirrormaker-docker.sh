@@ -77,11 +77,11 @@ if [ $? -ne 0 ]; then
 fi
 
 # Add needed minimum options if none are given
-if [[ ! "$@" =~  "*--num.streams*" ]]; then
-  params="--num.streams $MM_STREAMS"
+if [[ ! "$@" ==  *"--num.streams"* ]]; then
+  params="--num.streams $MM_STREAMS "
 fi
-if [[ ! "$@" =~  "*--whitelist*" || ! "$@" =~  "*--blacklist*" ]]; then
-  params='${params} --whitelist="${MM_TOPICS}"'
+if [[ ! "$@" ==  *"--whitelist"* && ! "$@" ==  *"--blacklist"* ]]; then
+  params=${params}"--whitelist=\"${MM_TOPICS}\""
 fi
 
 exec /usr/bin/kafka-run-class kafka.tools.MirrorMaker --producer.config ${mm_pd_cfg_file} --consumer.config ${mm_cs_cfg_file} "$@" $params

@@ -23,4 +23,5 @@ USER ${CONFLUENT_USER}
 
 VOLUME [ "${MM_CFG_DIR}" ]
 
-CMD [ "/usr/local/bin/mirrormaker-docker.sh" ]
+ENTRYPOINT [ "/usr/local/bin/mirrormaker-docker.sh" ]
+CMD [""]
