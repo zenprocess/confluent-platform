@@ -110,8 +110,7 @@ fi
 
 # Add SSH tunneling if requested
 if [[ "$MM_SSH_ACCESS" == "yes" ]]; then
-  if [[ -z ${MM_SSH_TUNNEL_DEST} || -z ${MM_SSH_PKEY_JUMP} || -z ${MM_SSH_PKEY_VPC} || -z ${MM_SSH_CFG_URL} || -z ${MM_SSH_PKEY_JUMP_URL} || -z ${MM_SSH_PKEY_VPC_URL}
-]]; then
+  if [[ -z ${MM_SSH_TUNNEL_DEST} || -z ${MM_SSH_PKEY_JUMP} || -z ${MM_SSH_PKEY_VPC} || -z ${MM_SSH_CFG_URL} || -z ${MM_SSH_PKEY_JUMP_URL} || -z ${MM_SSH_PKEY_VPC_URL} ]]; then
     echo "[MM] Missing mandatory SSH setting for destinations: MM_SSH_TUNNEL_DEST"
     exit 1
   fi
