@@ -119,7 +119,7 @@ if [[ "$MM_SSH_ACCESS" == "yes" ]]; then
   echo "[MM] Downloading MM SSH config file from ${MM_SSH_CFG_URL}"
   dload "${MM_SSH_CFG_URL}" "${MM_SSH_CFG}"
   echo "[MM] Downloading MM SSH private key from ${MM_SSH_PKEY_JUMP_URL}"
-  dload "${MM_SSH_PKEY_JUMP_URL}" "${MM_SSH_DIR}/${MM_SSH_PKEY}"
+  dload "${MM_SSH_PKEY_JUMP_URL}" "${MM_SSH_DIR}/${MM_SSH_PKEY_JUMP}"
   echo "[MM] Downloading MM SSH private key from ${MM_SSH_PKEY_VPC_URL}"
   dload "${MM_SSH_PKEY_VPC_URL}" "${MM_SSH_DIR}/${MM_SSH_PKEY_VPC}"
 
