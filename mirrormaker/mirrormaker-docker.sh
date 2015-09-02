@@ -13,7 +13,7 @@ MM_SSH_CFG="${MM_SSH_DIR}/config"
 : ${MM_SSH_PKEY_VPC:-""}
 : ${MM_SSH_CFG_URL:-""}
 : ${MM_SSH_PKEY_JUMP_URL:-""}
-: ${MM_SSH_PKEY_VPC_URL:-"}
+: ${MM_SSH_PKEY_VPC_URL:-""}
 
 : ${MM_PD_PRODUCER_TYPE:="async"}
 : ${MM_PD_CLIENT_ID:="mirrormaker"}
