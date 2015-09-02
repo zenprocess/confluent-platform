@@ -115,7 +115,7 @@ if [[ "$MM_SSH_ACCESS" == "yes" ]]; then
     exit 1
   fi
 
-  # Download SSH files
+  # Download SSH files and set permissions
   echo "[MM] Downloading MM SSH config file from ${MM_SSH_CFG_URL}"
   dload "${MM_SSH_CFG_URL}" "${MM_SSH_CFG}"
   echo "[MM] Downloading MM SSH private key from ${MM_SSH_PKEY_JUMP_URL}"
@@ -123,8 +123,9 @@ if [[ "$MM_SSH_ACCESS" == "yes" ]]; then
   echo "[MM] Downloading MM SSH private key from ${MM_SSH_PKEY_VPC_URL}"
   dload "${MM_SSH_PKEY_VPC_URL}" "${MM_SSH_DIR}/${MM_SSH_PKEY_VPC}"
 
+  chmod 400 ${MM_SSH_DIR}/*.pem
+
   # Setup SSH tunnel for each destination specified
-  cat ${MM_SSH_CFG}
   for i in $(env | grep ^'MM_SSH_TUNNEL_DEST' | cut -d'=' -f2 | tr , ' '); do
     ssh-tunnel $i
   done
