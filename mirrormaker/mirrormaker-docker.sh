@@ -54,7 +54,7 @@ ssh-tunnel() {
   ssh -qANf -F ${MM_SSH_CFG} ${ssh_dest}
   if [ $? -ne 0 ]; then
     echo "[MM] Failed to setup SSH tunnel to $ssh_dest"
-    exit 1
+#    exit 1
   fi
 }
 
@@ -124,6 +124,7 @@ if [[ "$MM_SSH_ACCESS" == "yes" ]]; then
   dload "${MM_SSH_PKEY_VPC_URL}" "${MM_SSH_DIR}/${MM_SSH_PKEY_VPC}"
 
   # Setup SSH tunnel for each destination specified
+  cat ${MM_SSH_CFG}
   for i in $(env | grep ^'MM_SSH_TUNNEL_DEST' | cut -d'=' -f2 | tr , ' '); do
     ssh-tunnel $i
   done
