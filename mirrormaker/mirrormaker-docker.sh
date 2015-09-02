@@ -54,7 +54,7 @@ ssh-tunnel() {
   ssh -qANf -F ${MM_SSH_CFG} ${ssh_dest}
   if [ $? -ne 0 ]; then
     echo "[MM] Failed to setup SSH tunnel to $ssh_dest"
-#    exit 1
+    exit 1
   fi
 }
 
@@ -140,7 +140,9 @@ if [[ "$@" ==  *"--"* ]]; then
     params=${params}"--whitelist=\"${MM_TOPICS}\""
   fi
 
+  echo "[MM] Starting MirrorMaker..."
   exec /usr/bin/kafka-run-class kafka.tools.MirrorMaker --producer.config ${mm_pd_cfg_file} --consumer.config ${mm_cs_cfg_file} "$@" $params
 else
+  echo "[MM] Starting your process..."
   exec "$@"
 fi
