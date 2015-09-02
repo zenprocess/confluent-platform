@@ -1,7 +1,19 @@
 #!/bin/bash
 
-mm_pd_cfg_file="/etc/kafka-mirrormaker/mirrormaker-producer.config"
-mm_cs_cfg_file="/etc/kafka-mirrormaker/mirrormaker-consumer.config"
+MM_CFG_DIR="/etc/kafka-mirrormaker"
+
+mm_pd_cfg_file="${MM_CFG_DIR}/mirrormaker-producer.config"
+mm_cs_cfg_file="${MM_CFG_DIR}/mirrormaker-consumer.config"
+
+MM_SSH_DIR="${MM_CFG_DIR}/.ssh"
+MM_SSH_CFG="${MM_SSH_DIR}/config"
+
+: ${MM_SSH_ACCESS:-"yes"}
+: ${MM_SSH_PKEY_JUMP:-""}
+: ${MM_SSH_PKEY_VPC:-""}
+: ${MM_SSH_CFG_URL:-""}
+: ${MM_SSH_PKEY_JUMP_URL:-""}
+: ${MM_SSH_PKEY_VPC_URL:-"}
 
 : ${MM_PD_PRODUCER_TYPE:="async"}
 : ${MM_PD_CLIENT_ID:="mirrormaker"}
@@ -16,6 +28,13 @@ mm_cs_cfg_file="/etc/kafka-mirrormaker/mirrormaker-consumer.config"
 : ${MM_STREAMS:=2}
 : ${MM_TOPICS:=".*"}
 
+export MM_SSH_ACCESS
+export MM_SSH_PKEY_JUMP
+export MM_SSH_PKEY_VPC
+export MM_SSH_CFG_URL
+export MM_SSH_PKEY_JUMP_URL
+export MM_SSH_PKEY_VPC_URL
+
 export MM_PD_PRODUCER_TYPE
 export MM_PD_CLIENT_ID
 export MM_PD_COMPRESSION_CODEC
@@ -29,22 +48,35 @@ export MM_CS_ZOOKEEPER_CONNECT
 export MM_STREAMS
 export MM_TOPICS
 
+ssh-tunnel() {
+  # Setup SSH tunnel
+  ssh_dest=$1
+  ssh -qANf -F ${MM_SSH_CFG} ${ssh_dest}
+  if [ $? -ne 0 ]; then
+    echo "[MM] Failed to setup SSH tunnel to $ssh_dest"
+    exit 1
+  fi
+}
+
+dload() {
+  # Download specified file
+  url=$1
+  dest=$2
+  curl --location --silent --insecure ${url} --output ${dest}
+  if [ $? -ne 0 ]; then
+    echo "[MM] Failed to download ${url} exiting."
+    exit 1
+  fi
+}
+
 # Download the config file, if given a URL
 if [ ! -z "$MM_PD_CFG_URL" ]; then
   echo "[MM] Downloading MM producer config file from ${MM_PD_CFG_URL}"
-  curl --location --silent --insecure --output ${mm_pd_cfg_file} ${MM_PD_CFG_URL}
-  if [ $? -ne 0 ]; then
-    echo "[MM] Failed to download ${MM_PD_CFG_URL} exiting."
-    exit 1
-  fi
+  dload "${MM_PD_CFG_URL}" "${mm_pd_cfg_file}"
 fi
 if [ ! -z "$MM_CS_CFG_URL" ]; then
   echo "[MM] Downloading MM conusumer 1 config file from ${MM_CS_CFG_URL}"
-  curl --location --silent --insecure --output ${mm_cs_cfg_file} ${MM_CS_CFG_URL}
-  if [ $? -ne 0 ]; then
-    echo "[MM] Failed to download ${MM_CS_CFG_URL} exiting."
-    exit 1
-  fi
+  dload "${MM_CS_CFG_URL}" "${mm_cs_cfg_file}"
 fi
 
 if [ ! -f ${mm_pd_cfg_file} ]; then
@@ -64,7 +96,7 @@ for var in $(env | grep -v '^MM_CS_CFG_' | grep '^MM_CS_' | sort); do
   echo "${key}=${value}" >> ${mm_cs_cfg_file}
 done
 
-# Check for needed consumer/producer properties
+# Check for needed properties
 grep zookeeper.connect ${mm_cs_cfg_file} &>/dev/null
 if [ $? -ne 0 ]; then
   echo "[MM] Missing mandatory consumer setting: zookeeper.connect"
@@ -74,6 +106,28 @@ grep metadata.broker.list ${mm_pd_cfg_file} &>/dev/null
 if [ $? -ne 0 ]; then
   echo "[MM] Missing mandatory producer setting: metadata.broker.list"
   exit 1
+fi
+
+# Add SSH tunneling if requested
+if [[ "$MM_SSH_ACCESS" == "yes" ]]; then
+  if [[ -z ${MM_SSH_TUNNEL_DEST} || -z ${MM_SSH_PKEY_JUMP} || -z ${MM_SSH_PKEY_VPC} || -z ${MM_SSH_CFG_URL} || -z ${MM_SSH_PKEY_JUMP_URL} || -z ${MM_SSH_PKEY_VPC_URL}
+]]; then
+    echo "[MM] Missing mandatory SSH setting for destinations: MM_SSH_TUNNEL_DEST"
+    exit 1
+  fi
+
+  # Download SSH files
+  echo "[MM] Downloading MM SSH config file from ${MM_SSH_CFG_URL}"
+  dload "${MM_SSH_CFG_URL}" "${MM_SSH_CFG}"
+  echo "[MM] Downloading MM SSH private key from ${MM_SSH_PKEY_JUMP_URL}"
+  dload "${MM_SSH_PKEY_JUMP_URL}" "${MM_SSH_DIR}/${MM_SSH_PKEY}"
+  echo "[MM] Downloading MM SSH private key from ${MM_SSH_PKEY_VPC_URL}"
+  dload "${MM_SSH_PKEY_VPC_URL}" "${MM_SSH_DIR}/${MM_SSH_PKEY_VPC}"
+
+  # Setup SSH tunnel for each destination specified
+  for i in $(env | grep ^'MM_SSH_TUNNEL_DEST' | cut -d'=' -f2 | tr , ' '); do
+    ssh-tunnel $i
+  done
 fi
 
 # Add needed minimum options if none are given
