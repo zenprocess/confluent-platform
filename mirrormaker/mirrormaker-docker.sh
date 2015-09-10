@@ -15,18 +15,12 @@ MM_SSH_CFG="${MM_SSH_DIR}/config"
 : ${MM_SSH_PKEY_JUMP_URL:-""}
 : ${MM_SSH_PKEY_VPC_URL:-""}
 
-: ${MM_PD_PRODUCER_TYPE:="async"}
-: ${MM_PD_CLIENT_ID:="mirrormaker"}
-: ${MM_PD_COMPRESSION_CODEC:="snappy"}
-: ${MM_PD_REQUEST_REQUIRED_ACKS:=1}
-: ${MM_PD_PRODUCER_TYPE:="async"}
-: ${MM_PD_METADATA_BROKER_LIST:=""}
+: ${MM_STREAMS:="1"}
+: ${MM_PRODUCERS:="1"}
 
-: ${MM_CS_GROUP_ID:="mirrormaker"}
-: ${MM_CS_ZOOKEEPER_CONNECT:=""}
+: ${MM_PD_CLIENT_ID:="mm-1"}
 
-: ${MM_STREAMS:=2}
-: ${MM_TOPICS:=".*"}
+: ${MM_CS_GROUP_ID:="mm-1"}
 
 export MM_SSH_ACCESS
 export MM_SSH_PKEY_JUMP
@@ -35,18 +29,12 @@ export MM_SSH_CFG_URL
 export MM_SSH_PKEY_JUMP_URL
 export MM_SSH_PKEY_VPC_URL
 
-export MM_PD_PRODUCER_TYPE
+export MM_STREAMS
+export MM_PRODUCERS
+
 export MM_PD_CLIENT_ID
-export MM_PD_COMPRESSION_CODEC
-export MM_PD_REQUEST_REQUIRED_ACKS
-export MM_PD_PRODUCER_TYPE
-export MM_PD_METADATA_BROKER_LIST
 
 export MM_CS_GROUP_ID
-export MM_CS_ZOOKEEPER_CONNECT
-
-export MM_STREAMS
-export MM_TOPICS
 
 ssh-tunnel() {
   # Setup SSH tunnel
@@ -132,16 +120,9 @@ if [[ "$MM_SSH_ACCESS" == "yes" ]]; then
 fi
 
 # Add needed minimum options if none are given
-if [[ "$@" ==  *"--"* ]]; then
-  if [[ "$@" !=  *"--num.streams"* ]]; then
-    params="--num.streams $MM_STREAMS "
-  fi
-  if [[ "$@" !=  *"--whitelist"* && "$@" !=  *"--blacklist"* ]]; then
-    params=${params}"--whitelist=\"${MM_TOPICS}\""
-  fi
-
+if [[ "$@" !=  "--"* ]]; then
   echo "[MM] Starting MirrorMaker..."
-  exec /usr/bin/kafka-run-class kafka.tools.MirrorMaker --producer.config ${mm_pd_cfg_file} --consumer.config ${mm_cs_cfg_file} "$@" $params
+  exec /usr/bin/kafka-run-class kafka.tools.MirrorMaker --producer.config ${mm_pd_cfg_file} --consumer.config ${mm_cs_cfg_file} --num.streams $MM_STREAMS --num.producers $MM_PRODUCERS "$@"
 else
   echo "[MM] Starting your process..."
   exec "$@"
