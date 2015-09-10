@@ -120,7 +120,7 @@ if [[ "$MM_SSH_ACCESS" == "yes" ]]; then
 fi
 
 # Add needed minimum options if none are given
-if [[ "$@" !=  "--"* ]]; then
+if [[ "$@" ==  "--"* ]]; then
   echo "[MM] Starting MirrorMaker..."
   exec /usr/bin/kafka-run-class kafka.tools.MirrorMaker --producer.config ${mm_pd_cfg_file} --consumer.config ${mm_cs_cfg_file} --num.streams $MM_STREAMS --num.producers $MM_PRODUCERS "$@"
 else
