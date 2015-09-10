@@ -33,5 +33,14 @@ A more complex setup with a source Kafka ZooKeeper cluster running on a nodes 17
 docker run --name mirrormaker -e MM_CS_ZOOKEEPER_CONNECT=172.17.8.101:2181,172.17.8.102:2181,172.17.8.103:2181/chroot/kafka -e MM_PD_METADATA_BROKER_LIST=172.17.10.101:9092,172.17.10.102:9092,172.17.10.103:9092 -e MM_STREAMS=3 -e MM_PRODUCERS=3 -e MM_CS_GROUP_ID=mirrormaker -e MM_PD_CLIENT_ID=mirrormaker -e MM_PD_REQUEST_REQUIRED_ACKS=1 -e MM_WHITE_LIST="mm-test" cgswong/mirrormaker-ssh
 ```
 
+### Loading additional consumer configruations
+To use multiple consumer configurations you would use a volume mount (`-v $PWD:/etc/kafka-mirrormaker`) containing your additional consumer configuration file and make reference to the additional file as an additional MirrorMaker command line option:
+
+```sh
+docker run --name mirrormaker -e MM_CS_ZOOKEEPER_CONNECT=172.17.8.101:2181 -e MM_PD_METADATA_BROKER_LIST=172.17.8.102:9092 -v $PWD:/etc/kafka-mirrormaker cgswong/mirrormaker-ssh --consumer.config /etc/kafka-mirrormaker/mirrormaker-consumer2.config
+```
+
+In the above `mirrormaker-consumer2` is the name of your provided 2nd consumer configuration file provided from your Docker host volume mount.
+
 ## MirrorMaker Documentation
 https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=27846330
