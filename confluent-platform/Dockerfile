@@ -12,9 +12,9 @@ ENV CONFLUENT_MAJOR_VERSION="1.0"
 
 RUN echo "deb [arch=all] http://packages.confluent.io/deb/${CONFLUENT_MAJOR_VERSION} stable main" >> /etc/apt/sources.list &&\
     apt-get update && \
-    apt-get upgrade -y &&\
-    apt-get install -y \
+    apt-get -y upgrade &&\
+    apt-get -y install \
       curl \
       openjdk-${JAVA_VERSION}-jre-headless &&\
     curl -sSL http://packages.confluent.io/deb/${CONFLUENT_MAJOR_VERSION}/archive.key | apt-key add - &&\
-    apt-get install -y confluent-platform-${SCALA_VERSION}
+    apt-get -y install confluent-platform-${SCALA_VERSION}
