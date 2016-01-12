@@ -21,7 +21,7 @@ RUN groupadd -r ${CONFLUENT_GROUP} &&\
     chmod +x /usr/local/bin/zkStart.sh
 
 USER ${CONFLUENT_USER}
-VOLUME ["${ZK_DATADIR}"]
+VOLUME ["${ZK_DATADIR}","${ZOOCFGDIR}"]
 
 # Expose client port (2188/tcp), peer connection port (2888/tcp), leader election port (3888/tcp)
 EXPOSE 2181 2888 3888 ${JMXPORT}
