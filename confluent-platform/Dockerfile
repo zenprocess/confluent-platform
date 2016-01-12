@@ -7,14 +7,17 @@ FROM debian:8.2
 ENV DEBIAN_FRONTEND noninteractive
 
 ENV SCALA_VERSION="2.10.4"
-ENV JAVA_VERSION="7"
-ENV CONFLUENT_MAJOR_VERSION="1.0"
+ENV JAVA_VERSION="8"
+ENV CP_VERSION="1.0.1"
+#ENV CP_MAJOR_VERSION=${CP_VERSION%.*}
 
-RUN echo "deb [arch=all] http://packages.confluent.io/deb/${CONFLUENT_MAJOR_VERSION} stable main" >> /etc/apt/sources.list &&\
-    apt-get update && \
+RUN echo "deb http://http.debian.net/debian jessie-backports main" >> /etc/apt/sources.list &&\
+    apt-get update &&\
     apt-get -y upgrade &&\
     apt-get -y install \
       curl \
       openjdk-${JAVA_VERSION}-jre-headless &&\
-    curl -sSL http://packages.confluent.io/deb/${CONFLUENT_MAJOR_VERSION}/archive.key | apt-key add - &&\
+    curl -sSL http://packages.confluent.io/deb/${CP_VERSION%.*}/archive.key | apt-key add - &&\
+    echo "deb [arch=all] http://packages.confluent.io/deb/${CP_VERSION%.*} stable main" >> /etc/apt/sources.list &&\
+    apt-get update &&\
     apt-get -y install confluent-platform-${SCALA_VERSION}
