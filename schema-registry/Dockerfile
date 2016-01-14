@@ -18,7 +18,7 @@ COPY log4j.properties ${SR_CFGDIR}/
 
 RUN groupadd -r ${CONFLUENT_GROUP} &&\
     useradd -r -g ${CONFLUENT_GROUP} ${CONFLUENT_USER} &&\
-    chown -R ${CONFLUENT_USER}:${CONFLUENT_GROUP} ${SR_CFGDIR}/schema-registry.properties /usr/local/bin/schema-registry-docker.sh &&\
+    chown -R ${CONFLUENT_USER}:${CONFLUENT_GROUP} ${SR_CFGDIR} /var/log/kafka /usr/local/bin/schema-registry-docker.sh &&\
     chmod +x /usr/local/bin/schema-registry-docker.sh
 
 USER $CONFLUENT_USER

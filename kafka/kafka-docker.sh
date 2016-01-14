@@ -35,12 +35,10 @@ fi
 : ${kafka_auto_create_topics_enable:=true}
 : ${kafka_broker_id:=1}
 : ${kafka_delete_topic_enable:=true}
-: ${kafka_dual_commit_enabled:=false}
 : ${kafka_log_cleaner_enable:=true}
 : ${kafka_log_retention_hours:=168}
 : ${kafka_num_partitions:=1}
 : ${kafka_num_recovery_threads_per_data_dir:=1}
-: ${kafka_offsets_storage:="kafka"}
 : ${kafka_port:=9092}
 : ${kafka_zookeeper_connect:="${ZOOKEEPER_PORT_2181_TCP_ADDR}:${ZOOKEEPER_PORT_2181_TCP_PORT}"}
 : ${kafka_zookeeper_connection_timeout_ms:=6000}
@@ -48,17 +46,15 @@ fi
 export kafka_auto_create_topics_enable
 export kafka_broker_id
 export kafka_delete_topic_enable
-export kafka_dual_commit_enabled
 export kafka_log_cleaner_enable
 export kafka_log_dir="/var/lib/kafka"
 export kafka_log_retention_hours
 export kafka_num_partitions
 export kafka_num_recovery_threads_per_data_dir
-export kafka_offsets_storage
 export kafka_port
 export kafka_zookeeper_connect
 export kafka_zookeeper_connection_timeout_ms
-export KAFKA_LOG4J_OPTS:="-Dlog4j.configuration=file:/etc/kafka/log4j.properties"
+export KAFKA_LOG4J_OPTS="-Dlog4j.configuration=file:/etc/kafka/log4j.properties"
 
 # Process general environment variables
 for VAR in $(env | grep '^kafka_' | grep -v '^kafka_cfg_' | sort); do
@@ -67,7 +63,7 @@ for VAR in $(env | grep '^kafka_' | grep -v '^kafka_cfg_' | sort); do
   if egrep -q "(^|^#)${key}" ${KAFKA_CFGFILE}; then
     sed -r -i "s\\(^|^#)${key}=.*$\\${key}=${!value}\\g" ${KAFKA_CFGFILE}
   else
-    echo "$key=${!value}" >> ${KAFKA_CFGFILE}
+    echo "${key}=${!value}" >> ${KAFKA_CFGFILE}
   fi
 done
 

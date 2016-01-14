@@ -14,7 +14,7 @@ COPY log4j.properties /etc/kafka/
 RUN groupadd -r ${CONFLUENT_GROUP} &&\
     useradd -r -g ${CONFLUENT_GROUP} ${CONFLUENT_USER} &&\
     mkdir -p ${kafka_log_dir} ${KAFKA_CFGDIR} &&\
-    chown -R ${CONFLUENT_USER}:${CONFLUENT_GROUP} ${kafka_log_dir} ${KAFKA_CFGDIR} /usr/local/bin/kafka-docker.sh &&\
+    chown -R ${CONFLUENT_USER}:${CONFLUENT_GROUP} ${kafka_log_dir} ${KAFKA_CFGDIR} /var/log/kafka /usr/local/bin/kafka-docker.sh &&\
     chmod +x /usr/local/bin/kafka-docker.sh
 
 USER ${CONFLUENT_USER}

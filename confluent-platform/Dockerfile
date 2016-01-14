@@ -9,7 +9,6 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV SCALA_VERSION="2.10.4"
 ENV JAVA_VERSION="8"
 ENV CP_VERSION="1.0.1"
-#ENV CP_MAJOR_VERSION=${CP_VERSION%.*}
 
 RUN echo "deb http://http.debian.net/debian jessie-backports main" >> /etc/apt/sources.list &&\
     apt-get update &&\

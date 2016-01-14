@@ -16,7 +16,7 @@ COPY log4j.properties /etc/kafka
 RUN groupadd -r ${CONFLUENT_GROUP} &&\
     useradd -r -g ${CONFLUENT_GROUP} ${CONFLUENT_USER} &&\
     mkdir -p ${ZK_DATADIR} &&\
-    chown -R ${CONFLUENT_GROUP}:${CONFLUENT_USER} ${ZK_DATADIR} /usr/local/bin/zkStart.sh /etc/kafka/zookeeper.properties &&\
+    chown -R ${CONFLUENT_GROUP}:${CONFLUENT_USER} ${ZK_DATADIR} ${ZOOCFGDIR} /var/log/kafka /usr/local/bin/zkStart.sh /etc/kafka/zookeeper.properties &&\
     chmod +x /usr/local/bin/zkStart.sh
 
 USER ${CONFLUENT_USER}

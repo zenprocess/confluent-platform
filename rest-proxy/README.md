@@ -12,10 +12,10 @@ The container can be configured via environment variables where any [Kafka REST 
 | rp_schema_registry_url  | schema.registry.url | http://SR_PORT_8081_TCP_ADDR:SR_PORT_8081_TCP_PORT        |
 | rp_zookeeper_connect    | zookeeper.connect   | ZOOKEEPER_PORT_2181_TCP_ADDR:ZOOKEEPER_PORT_2181_TCP_PORT |
 
-A few sensible values have been set as given above. A basic invocation using a link to a local ZooKeeper and Schema Registry instance would be:
+A few sensible values have been set as given above. A basic invocation using a link to a local ZooKeeper, Kafka Broker and Schema Registry instance would be:
 
 ```sh
-docker run --rm --name kafka-rest -p 8081:8081 --link zookeeper:zookeeper --link SR:SR cgswong/confluent-kafka-rest
+docker run --rm --name kafka-rest -p 8082:8082 --link zookeeper:zookeeper --link schema-registry:sr --link kafka:kafka cgswong/confluent-rest-proxy
 ```
 
 ### Using your configuration file

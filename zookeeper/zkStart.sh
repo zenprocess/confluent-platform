@@ -47,7 +47,7 @@ export zk_tickTime
 if [ ! -z "$zk_cfg_url" ]; then
   log "[INFO] Downloading config file from ${zk_cfg_url}"
   curl -sSL --output ${ZOOCFGDIR}/${ZOOCFG} ${zk_cfg_url} || die "Unable to download ${zk_cfg_url}"
-elif [ ! -f ${ZOOCFGDIR}/${ZOOCFG} ]
+elif [ ! -f ${ZOOCFGDIR}/${ZOOCFG} ]; then
   touch ${ZOOCFGDIR}/${ZOOCFG}
 fi
 
@@ -56,13 +56,13 @@ echo $zk_id > $zk_dataDir/myid
 
 # Process env variables
 log "[INFO] Processing config file..."
-for var in $(env | grep -v '^zk_cfg_' | grep '^zk_' | sort); do
-  key=$(echo $var | sed -r 's/zk_(.*)=.*/\1/g' | tr _ .)
-  value=$(echo $var | sed -r 's/.*=(.*)/\1/g')
+for var in $(env | grep '^zk_' | grep -v '^zk_cfg_' | sort); do
+  key=$(echo "${var}" | sed -r "s/zk_(.*)=.*/\1/g" | tr _ .)
+  value=$(echo "${var}" | sed -r "s/.*=(.*)/\1/g")
   if egrep -q "(^|^#)${key}" ${ZOOCFGDIR}/${ZOOCFG}; then
-    sed -r -i "s\\(^|^#)${key}=.*$\\${key}=${!value}\\g" ${ZOOCFGDIR}/${ZOOCFG}
+    sed -r -i "s\\(^|^#)${key}=.*$\\${key}=${value}\\g" ${ZOOCFGDIR}/${ZOOCFG}
   else
-    echo "$key=${!value}" >> ${ZOOCFGDIR}/${ZOOCFG}
+    echo "$key=${value}" >> ${ZOOCFGDIR}/${ZOOCFG}
   fi
 done
 
@@ -93,7 +93,7 @@ cat ${ZOOCFGDIR}/${ZOOCFG} | log
 
 # if `docker run` first argument start with `--` the user is passing launcher arguments
 if [[ "$1" == "-"* || -z $1 ]]; then
-  exec /usr/bin/zookeeper-server-start.sh ${ZOOCFG} "$@" &
+  exec /usr/bin/zookeeper-server-start ${ZOOCFGDIR}/${ZOOCFG} "$@" &
   pid=$!
   log "[INFO] Started with PID: ${pid}"
   wait ${pid}

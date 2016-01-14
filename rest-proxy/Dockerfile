@@ -12,7 +12,7 @@ COPY log4j.properties ${SR_CFGDIR}/
 
 RUN groupadd -r ${CONFLUENT_GROUP} &&\
     useradd -r -g ${CONFLUENT_GROUP} ${CONFLUENT_USER} &&\
-    chown -R ${CONFLUENT_USER}:${CONFLUENT_GROUP} ${RP_CFGDIR} /usr/local/bin/kafka-rest-docker.sh &&\
+    chown -R ${CONFLUENT_USER}:${CONFLUENT_GROUP} ${RP_CFGDIR} /var/log/kafka /usr/local/bin/kafka-rest-docker.sh &&\
     chmod +x /usr/local/bin/kafka-rest-docker.sh
 
 USER ${CONFLUENT_USER}

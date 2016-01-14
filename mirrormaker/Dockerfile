@@ -13,7 +13,7 @@ COPY tools-log4j.properties ${SR_CFGDIR}/
 RUN groupadd -r ${CONFLUENT_GROUP} &&\
     useradd -r -g ${CONFLUENT_GROUP} ${CONFLUENT_USER} &&\
     mkdir -p ${MM_CFGDIR} &&\
-    chown -R ${CONFLUENT_USER}:${CONFLUENT_GROUP} /usr/local/bin/mirrormaker-docker.sh ${MM_CFGDIR} &&\
+    chown -R ${CONFLUENT_USER}:${CONFLUENT_GROUP} /var/log/kafka /usr/local/bin/mirrormaker-docker.sh ${MM_CFGDIR} &&\
     chmod +x /usr/local/bin/mirrormaker-docker.sh
 
 USER ${CONFLUENT_USER}
