@@ -40,9 +40,9 @@ fi
 : ${kafka_log_retention_hours:=168}
 : ${kafka_num_partitions:=1}
 : ${kafka_num_recovery_threads_per_data_dir:=1}
-: ${kafka_offsets_storage:=kafka}
+: ${kafka_offsets_storage:="kafka"}
 : ${kafka_port:=9092}
-: ${kafka_zookeeper_connect:=$ZOOKEEPER_PORT_2181_TCP_ADDR:$ZOOKEEPER_PORT_2181_TCP_PORT}
+: ${kafka_zookeeper_connect:="${ZOOKEEPER_PORT_2181_TCP_ADDR}:${ZOOKEEPER_PORT_2181_TCP_PORT}"}
 : ${kafka_zookeeper_connection_timeout_ms:=6000}
 
 export kafka_auto_create_topics_enable
@@ -95,7 +95,7 @@ fi
 
 # if `docker run` first argument start with `--` the user is passing launcher arguments
 if [[ "$1" == "-"* || -z $1 ]]; then
-  exec ${KAFKA_HOME}/bin/kafka-server-start.sh ${KAFKA_CFGFILE} "$@" &
+  exec /usr/bin/kafka-server-start ${KAFKA_CFGFILE} "$@" &
   pid=$!
   log "[INFO] Started with PID: ${pid}"
   wait ${pid}
