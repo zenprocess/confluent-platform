@@ -59,3 +59,7 @@ docker build -t cgswong/confluent-rest-proxy:${CP_VERSION} rest-proxy/
 log "${yellow}Building cgswong/confluent-tools:${CP_VERSION}${reset}"
 docker build -t cgswong/confluent-tools:${CP_VERSION} tools/
 [ $? -eq 0 ] && log "${green}(PASS)${reset}" || log "${red}FAIL!${reset}"
+
+log "${yellow}Building cgswong/confluent-mirrormaker:${CP_VERSION}${reset}"
+docker build -t cgswong/confluent-mirrormaker:${CP_VERSION} mirrormaker/
+[ $? -eq 0 ] && log "${green}(PASS)${reset}" || log "${red}FAIL!${reset}"

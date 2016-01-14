@@ -7,14 +7,13 @@ ENV CONFLUENT_GROUP confluent
 ENV RP_CFGDIR "/etc/kafka-rest"
 ENV JMX_PORT 18082
 
-COPY rest-proxy-docker.sh /usr/local/bin/
+COPY kafka-rest-docker.sh /usr/local/bin/
 COPY log4j.properties ${SR_CFGDIR}/
 
 RUN groupadd -r ${CONFLUENT_GROUP} &&\
     useradd -r -g ${CONFLUENT_GROUP} ${CONFLUENT_USER} &&\
     chown -R ${CONFLUENT_USER}:${CONFLUENT_GROUP} ${RP_CFGDIR} /usr/local/bin/kafka-rest-docker.sh &&\
-    chmod +x /usr/local/bin/kafka-rest-docker.sh &&\
-
+    chmod +x /usr/local/bin/kafka-rest-docker.sh
 
 USER ${CONFLUENT_USER}
 VOLUME ["${RP_CFGDIR}"]
