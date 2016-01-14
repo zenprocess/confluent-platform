@@ -11,7 +11,7 @@ FROM cgswong/confluent-platform:1.0.1
 ENV CONFLUENT_USER confluent
 ENV CONFLUENT_GROUP confluent
 ENV SR_CFGDIR "/etc/schema-registry"
-ENV JMX_PORT 19092
+ENV JMX_PORT 18081
 
 COPY schema-registry-docker.sh /usr/local/bin/
 COPY log4j.properties ${SR_CFGDIR}/
