@@ -15,7 +15,7 @@ The container can be configured via environment variables where any [Kafka REST 
 A few sensible values have been set as given above. A basic invocation using a link to a local ZooKeeper and Schema Registry instance would be:
 
 ```sh
-docker run --rm --name schema-registry -p 8081:8081 --link zookeeper:zookeeper --link SR:SR cgswong/confluent-kafka-rest
+docker run --rm --name kafka-rest -p 8081:8081 --link zookeeper:zookeeper --link SR:SR cgswong/confluent-kafka-rest
 ```
 
 ### Using your configuration file
