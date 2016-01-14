@@ -1,28 +1,24 @@
 # Builds a docker image for the Kafka REST Proxy.
-# Expects links to "schema-registry" and "zookeeper" containers.
-#
-# Usage:
-#   docker build -t confluent/rest-proxy rest-proxy
-#   docker run -d --name rest-proxy --link zookeeper:zookeeper --link schema-registry:schema-registry \
-#       confluent/rest-proxy
 
-FROM confluent/platform
+FROM cgswong/confluent-platform:1.0.1
 
 ENV CONFLUENT_USER confluent
 ENV CONFLUENT_GROUP confluent
+ENV RP_CFGDIR "/etc/kafka-rest"
+ENV JMX_PORT 18082
 
 COPY rest-proxy-docker.sh /usr/local/bin/
+COPY log4j.properties ${SR_CFGDIR}/
 
 RUN groupadd -r ${CONFLUENT_GROUP} &&\
     useradd -r -g ${CONFLUENT_GROUP} ${CONFLUENT_USER} &&\
-    chown -R ${CONFLUENT_USER}:${CONFLUENT_GROUP} /etc/kafka-rest /usr/local/bin/rest-proxy-docker.sh &&\
-    chmod +x /usr/local/bin/rest-proxy-docker.sh &&\
-    # Fix for issue #77, PR #78: https://github.com/confluentinc/kafka-rest/pull/78/files
-    sed -e 's/\"kafka\"//' -i /usr/bin/kafka-rest-run-class
+    chown -R ${CONFLUENT_USER}:${CONFLUENT_GROUP} ${RP_CFGDIR} /usr/local/bin/kafka-rest-docker.sh &&\
+    chmod +x /usr/local/bin/kafka-rest-docker.sh &&\
 
 
 USER ${CONFLUENT_USER}
+VOLUME ["${RP_CFGDIR}"]
+# Expose client port (8081/http), JMX
+EXPOSE 8082 ${JMX_PORT}
 
-EXPOSE 8082
-
-CMD [ "/usr/local/bin/rest-proxy-docker.sh" ]
+ENTRYPOINT ["/usr/local/bin/kafka-rest-docker.sh"]
