@@ -29,7 +29,9 @@ die() {
 
 for SCALA_VERSION in ${SCALA_VERSIONS}; do
   cp confluent-platform/Dockerfile confluent-platform/Dockerfile.${CP_VERSION}b${SCALA_VERSION}
-  sed -e "s/ENV SCALA_VERSION=.*/ENV SCALA_VERSION=\"${SCALA_VERSION}\"/" -e "s/ENV CP_VERSION=.*/ENV CP_VERSION=\"${CP_VERSION}\"/" -i confluent-platform/Dockerfile.${CP_VERSION}b${SCALA_VERSION}
+  sed -e "s/ENV SCALA_VERSION=.*/ENV SCALA_VERSION=\"${SCALA_VERSION}\"/" \
+    -e "s/ENV CP_VERSION=.*/ENV CP_VERSION=\"${CP_VERSION}\"/" \
+    -i confluent-platform/Dockerfile.${CP_VERSION}b${SCALA_VERSION}
   TAGS="cgswong/confluent-platform:${CP_VERSION}b${SCALA_VERSION}"
   [ "x$SCALA_VERSION" = "x$DEFAULT_SCALA_VERSION" ] && TAGS="${TAGS} cgswong/confluent-platform:${CP_VERSION}"
   for TAG in ${TAGS}; do
@@ -41,25 +43,37 @@ done
 
 log "${yellow}Re-building dependencies...${reset}"
 log "${yellow}Building cgswong/confluent-zookeeper:${CP_VERSION}${reset}"
-docker build -t cgswong/confluent-zookeeper:${CP_VERSION} zookeeper/
+cp zookeeper/Dockerfile zookeeper/Dockerfile.${CP_VERSION}
+sed -e "s/confluent-platform:1.0.1/confluent-platform:${CP_VERSION}\"/" -i zookeeper/Dockerfile.${CP_VERSION}
+docker build -t cgswong/confluent-zookeeper:${CP_VERSION} -f zookeeper/Dockerfile.${CP_VERSION} zookeeper/
 [ $? -eq 0 ] && log "${green}(PASS)${reset}" || log "${red}FAIL!${reset}"
 
 log "${yellow}Building cgswong/confluent-kafka:${CP_VERSION}${reset}"
-docker build -t cgswong/confluent-kafka:${CP_VERSION} kafka/
+cp kafka/Dockerfile kafka/Dockerfile.${CP_VERSION}
+sed -e "s/confluent-platform:1.0.1/confluent-platform:${CP_VERSION}\"/" -i kafka/Dockerfile.${CP_VERSION}
+docker build -t cgswong/confluent-kafka:${CP_VERSION} -f kafka/Dockerfile.${CP_VERSION} kafka/
 [ $? -eq 0 ] && log "${green}(PASS)${reset}" || log "${red}FAIL!${reset}"
 
 log "${yellow}Building cgswong/confluent-schema-registry:${CP_VERSION}${reset}"
-docker build -t cgswong/confluent-schema-registry:${CP_VERSION} schema-registry/
+cp schema-registry/Dockerfile schema-registry/Dockerfile.${CP_VERSION}
+sed -e "s/confluent-platform:1.0.1/confluent-platform:${CP_VERSION}\"/" -i schema-registry/Dockerfile.${CP_VERSION}
+docker build -t cgswong/confluent-schema-registry:${CP_VERSION} -f schema-registry/Dockerfile.${CP_VERSION} schema-registry/
 [ $? -eq 0 ] && log "${green}(PASS)${reset}" || log "${red}FAIL!${reset}"
 
 log "${yellow}Building cgswong/confluent-rest-proxy:${CP_VERSION}${reset}"
-docker build -t cgswong/confluent-rest-proxy:${CP_VERSION} rest-proxy/
+cp rest-proxy/Dockerfile rest-proxy/Dockerfile.${CP_VERSION}
+sed -e "s/confluent-platform:1.0.1/confluent-platform:${CP_VERSION}\"/" -i rest-proxy/Dockerfile.${CP_VERSION}
+docker build -t cgswong/confluent-rest-proxy:${CP_VERSION} -f rest-proxy/Dockerfile.${CP_VERSION} rest-proxy/
 [ $? -eq 0 ] && log "${green}(PASS)${reset}" || log "${red}FAIL!${reset}"
 
 log "${yellow}Building cgswong/confluent-tools:${CP_VERSION}${reset}"
-docker build -t cgswong/confluent-tools:${CP_VERSION} tools/
+cp tools/Dockerfile tools/Dockerfile.${CP_VERSION}
+sed -e "s/confluent-platform:1.0.1/confluent-platform:${CP_VERSION}\"/" -i tools/Dockerfile.${CP_VERSION}
+docker build -t cgswong/confluent-tools:${CP_VERSION} -f tools/Dockerfile.${CP_VERSION} tools/
 [ $? -eq 0 ] && log "${green}(PASS)${reset}" || log "${red}FAIL!${reset}"
 
 log "${yellow}Building cgswong/confluent-mirrormaker:${CP_VERSION}${reset}"
-docker build -t cgswong/confluent-mirrormaker:${CP_VERSION} mirrormaker/
+cp mirrormaker/Dockerfile mirrormaker/Dockerfile.${CP_VERSION}
+sed -e "s/confluent-platform:1.0.1/confluent-platform:${CP_VERSION}\"/" -i mirrormaker/Dockerfile.${CP_VERSION}
+docker build -t cgswong/confluent-mirrormaker:${CP_VERSION} -f mirrormaker/Dockerfile.${CP_VERSION} mirrormaker/
 [ $? -eq 0 ] && log "${green}(PASS)${reset}" || log "${red}FAIL!${reset}"

@@ -14,9 +14,12 @@ RUN echo "deb http://http.debian.net/debian jessie-backports main" >> /etc/apt/s
     apt-get update &&\
     apt-get -y upgrade &&\
     apt-get -y install \
+      apt-utils \
+      bash \
       curl \
       openjdk-${JAVA_VERSION}-jre-headless &&\
     curl -sSL http://packages.confluent.io/deb/${CP_VERSION%.*}/archive.key | apt-key add - &&\
-    echo "deb [arch=all] http://packages.confluent.io/deb/${CP_VERSION%.*} stable main" >> /etc/apt/sources.list &&\
+    if [ "${CP_VERSION}" = "1.0.1" ]; then echo "deb [arch=all] http://packages.confluent.io/deb/${CP_VERSION%.*} stable main" >> /etc/apt/sources.list.d/confluent.list ;\
+    else echo "deb [arch=amd64] http://packages.confluent.io/deb/${CP_VERSION%.*} stable main" >> /etc/apt/sources.list.d/confluent.list ; fi &&\
     apt-get update &&\
     apt-get -y install confluent-platform-${SCALA_VERSION}
