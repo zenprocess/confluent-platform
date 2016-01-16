@@ -1,6 +1,6 @@
 # Builds a docker image running Confluent's distribution of Apache Kafka.
 
-FROM cgswong/confluent-platform:1.0.1
+FROM cgswong/confluent-platform:2.0.0
 
 ENV CONFLUENT_USER confluent
 ENV CONFLUENT_GROUP confluent

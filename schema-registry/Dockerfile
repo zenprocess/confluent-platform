@@ -1,12 +1,6 @@
 # Builds a docker image for the Confluent schema registry.
-# Expects links to "kafka" and "zookeeper" containers.
-#
-# Usage:
-#   docker build -t confluent/schema-registry schema-registry
-#   docker run -d --name schema-registry --link zookeeper:zookeeper --link kafka:kafka \
-#       --env SCHEMA_REGISTRY_AVRO_COMPATIBILITY_LEVEL=none confluent/schema-registry
 
-FROM cgswong/confluent-platform:1.0.1
+FROM cgswong/confluent-platform:2.0.0
 
 ENV CONFLUENT_USER confluent
 ENV CONFLUENT_GROUP confluent
