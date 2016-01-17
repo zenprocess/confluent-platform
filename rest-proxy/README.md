@@ -1,4 +1,4 @@
-## Confluent Platform Kafka RESET Proxy
+## Confluent Platform Kafka REST Proxy
 This is a highly configurable Dockerized [Confluent Platform Kafka REST Proxy](http://docs.confluent.io/2.0.0/kafka-rest/docs/index.html).
 
 ## How to use this image
