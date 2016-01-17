@@ -10,14 +10,14 @@ ENV ZOOCFGDIR /etc/kafka
 ENV ZOOCFG zookeeper.properties
 ENV JMXPORT 12181
 
+COPY zkStart.sh /usr/local/bin/
+COPY log4j.properties /etc/kafka/
+
 RUN groupadd -r ${CONFLUENT_GROUP} &&\
     useradd -r -g ${CONFLUENT_GROUP} ${CONFLUENT_USER} &&\
     mkdir -p ${ZK_DATADIR} &&\
     chown -R ${CONFLUENT_GROUP}:${CONFLUENT_USER} ${ZK_DATADIR} ${ZOOCFGDIR} /var/log/kafka /usr/local/bin/zkStart.sh /etc/kafka/zookeeper.properties &&\
     chmod +x /usr/local/bin/zkStart.sh
-
-COPY zkStart.sh /usr/local/bin/
-COPY log4j.properties /etc/kafka
 
 USER ${CONFLUENT_USER}
 VOLUME ["${ZK_DATADIR}","${ZOOCFGDIR}"]
