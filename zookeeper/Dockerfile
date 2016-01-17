@@ -1,6 +1,6 @@
 # Builds a docker image running Apache Zookeeper. Intended for use with Kafka.
 
-FROM cgswong/confluent-platform:2.0.0
+FROM cgswong/confluent-platform:1.0.1
 
 ENV ZK_DATADIR "/var/lib/zookeeper"
 ENV CONFLUENT_USER confluent
