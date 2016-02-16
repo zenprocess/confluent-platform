@@ -58,13 +58,13 @@ MM_PD_CFGFILE="/etc/kafka-mirrormaker/producer.properties"
 : ${mm_streams:=2}
 : ${mm_topics:=".*"}
 
-export mm_cs_group_id
-export mm_cs_zookeeper_connect
-export mm_pd_client_id
-export mm_pd_compression_codec
-export mm_pd_metadata_broker_list
-export mm_pd_producer_type
-export mm_pd_request_required_acks
+#export mm_cs_group_id
+#export mm_cs_zookeeper_connect
+#export mm_pd_client_id
+#export mm_pd_compression_codec
+#export mm_pd_metadata_broker_list
+#export mm_pd_producer_type
+#export mm_pd_request_required_acks
 export mm_streams
 export mm_topics
 
