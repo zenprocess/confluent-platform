@@ -26,7 +26,7 @@ dload() {
   # Download the config file
   url=$1
   dest=$2
-  if [ ! -z "${url}" ]; then
+  if [ ! -z "${url}" ] && [ ! -z "${dest}" ] && [ $# -eq 2 ]; then
     log "[INFO] Downloading config file from ${url}"
     curl -sSL ${url} --output ${dest} || die "Unable to download ${url}"
   fi
