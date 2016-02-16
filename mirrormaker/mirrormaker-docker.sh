@@ -41,7 +41,11 @@ varSub() {
   for var in $(env | grep "^${process}" | grep -v "^${noProcess}" | sort); do
     key=$(echo $var | sed -r "s/${process}(.*)=.*/\1/g" | tr A-Z a-z | tr _ .)
     value=$(echo $var | sed -r 's/.*=(.*)/\1/g')
+  if egrep -q "(^|^#)${key}" ${destFile}; then
+    sed -r -i "s\\(^|^#)${key}=.*$\\${key}=${!value}\\g" ${destFile}
+  else
     echo "${key}=${value}" >> ${destFile}
+  fi
   done
 }
 
@@ -78,10 +82,10 @@ varSub ${MM_PD_CFGFILE} mm_pd_ mm_pd_cfg_
 varSub ${MM_CS_CFGFILE} mm_cs_ mm_cs_cfg_
 
 # Check for needed consumer/producer properties
-grep zookeeper.connect ${MM_CS_CFGFILE} &>/dev/null
-[[ $? -ne 0 ]] && die "[MM] Missing mandatory consumer setting: zookeeper.connect"
-grep metadata.broker.list ${MM_PD_CFGFILE} &>/dev/null
-[[ $? -ne 0 ]] && die "[MM] Missing mandatory producer setting: metadata.broker.list"
+#grep zookeeper.connect ${MM_CS_CFGFILE} &>/dev/null
+#[[ $? -ne 0 ]] && die "[MM] Missing mandatory consumer setting: zookeeper.connect"
+#grep metadata.broker.list ${MM_PD_CFGFILE} &>/dev/null
+#[[ $? -ne 0 ]] && die "[MM] Missing mandatory producer setting: metadata.broker.list"
 
 # The built-in start scripts set the first three system properties here, but
 # we add two more to make remote JMX easier/possible to access in a Docker
@@ -104,22 +108,6 @@ if [ -z ${KAFKA_JMX_OPTS} ]; then
   KAFKA_JMX_OPTS="${KAFKA_JMX_OPTS} -Djava.rmi.server.hostname=${JAVA_RMI_SERVER_HOSTNAME:-localhost}"
   export KAFKA_JMX_OPTS
 fi
-
-# Add needed minimum options if none are given
-if [[ "$@" ==  *"--"* ]]; then
-  if [[ "$@" !=  *"--num.streams"* ]]; then
-    params="--num.streams $MM_STREAMS "
-  fi
-  if [[ "$@" !=  *"--whitelist"* && "$@" !=  *"--blacklist"* ]]; then
-    params=${params}"--whitelist=\"${MM_TOPICS}\""
-  fi
-
-  exec /usr/bin/kafka-run-class kafka.tools.MirrorMaker --producer.config ${MM_PD_CFGFILE} --consumer.config ${MM_CS_CFGFILE} "$@" $params
-else
-  exec "$@"
-fi
-
-
 
 # if `docker run` first argument start with `--` the user is passing launcher arguments
 if [[ "$1" == "-"* || -z $1 ]]; then
