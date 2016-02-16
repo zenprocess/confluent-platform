@@ -39,13 +39,13 @@ varSub() {
   noProcess=$3
   log "[INFO] Processing variables..."
   for var in $(env | grep "^${process}" | grep -v "^${noProcess}" | sort); do
-    key=$(echo $var | sed -r "s/${process}(.*)=.*/\1/g" | tr A-Z a-z | tr _ .)
-    value=$(echo $var | sed -r 's/.*=(.*)/\1/g')
-  if egrep -q "(^|^#)${key}" ${destFile}; then
-    sed -r -i "s\\(^|^#)${key}=.*$\\${key}=${!value}\\g" ${destFile}
-  else
-    echo "${key}=${value}" >> ${destFile}
-  fi
+    key=$(echo "${var}" | sed -r "s/${process}(.*)=.*/\1/g" | tr A-Z a-z | tr _ .)
+    value=$(echo "${var}" | sed -r 's/.*=(.*)/\1/g')
+    if egrep -q "(^|^#)${key}" ${destFile}; then
+      sed -r -i "s\\(^|^#)${key}=.*$\\${key}=${value}\\g" ${destFile}
+    else
+      echo "${key}=${value}" >> ${destFile}
+    fi
   done
 }
 
@@ -53,13 +53,8 @@ varSub() {
 MM_CS_CFGFILE="/etc/kafka-mirrormaker/consumer.properties"
 MM_PD_CFGFILE="/etc/kafka-mirrormaker/producer.properties"
 
-: ${mm_cs_group_id:="mirrormaker"}
-: ${mm_cs_zookeeper_connect:="${ZOOKEEPER_PORT_2181_TCP_ADDR}:${ZOOKEEPER_PORT_2181_TCP_PORT}"}
-: ${mm_pd_client_id:="mirrormaker"}
-: ${mm_pd_compression_codec:="snappy"}
-: ${mm_pd_metadata_broker_list:="${KAFKA_PORT_9092_TCP_ADDR}:${KAFKA_PORT_9092_TCP_PORT}"}
-: ${mm_pd_producer_type:="async"}
-: ${mm_pd_request_required_acks:=1}
+#: ${mm_cs_zookeeper_connect:="${ZOOKEEPER_PORT_2181_TCP_ADDR}:${ZOOKEEPER_PORT_2181_TCP_PORT}"}
+#: ${mm_pd_metadata_broker_list:="${KAFKA_PORT_9092_TCP_ADDR}:${KAFKA_PORT_9092_TCP_PORT}"}
 : ${mm_streams:=2}
 : ${mm_topics:=".*"}
 
