@@ -1,6 +1,6 @@
 # Builds a docker image for the Kafka REST Proxy.
 
-FROM cgswong/confluent-platform:2.0.0
+FROM cgswong/confluent-platform:2.0.1
 
 ENV CONFLUENT_USER confluent
 ENV CONFLUENT_GROUP confluent

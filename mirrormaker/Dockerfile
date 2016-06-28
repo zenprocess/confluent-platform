@@ -1,6 +1,6 @@
 # Builds a docker image for Kafka MirrorMaker.
 
-FROM cgswong/confluent-platform:1.0.1
+FROM cgswong/confluent-platform:2.0.1
 
 ENV CONFLUENT_USER confluent
 ENV CONFLUENT_GROUP confluent
