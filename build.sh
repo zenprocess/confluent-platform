@@ -23,9 +23,9 @@ die() {
   log "${red}[FAIL] $1${reset}" && exit 1
 }
 
-: ${SCALA_VERSIONS:="2.9.1 2.9.2 2.10.4 2.11.5"}
-: ${DEFAULT_SCALA_VERSION:="2.10.4"}
-: ${CP_VERSION:="1.0.1"}
+: ${SCALA_VERSIONS:="2.10 2.11"}
+: ${DEFAULT_SCALA_VERSION:="2.11"}
+: ${CP_VERSION:="2.0.1"}
 
 for SCALA_VERSION in ${SCALA_VERSIONS}; do
   cp confluent-platform/Dockerfile confluent-platform/Dockerfile.${CP_VERSION}b${SCALA_VERSION}
